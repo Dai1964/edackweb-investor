@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdackWeb — The Complete Business System for Local Trades</title>
+<meta name="description" content="A complete digital business system for local trades businesses. One investor per territory. Recurring revenue. Register your interest.">
+
+<!-- Async Google Fonts load: fetched as media="print" (non-blocking), then
+     swapped to "all" once loaded, so first paint never waits on a
+     font-hosting round trip. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
+
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --panel: #141414;
+    --panel-border: #262019;
+    --gold: #C9A84C;
+    --gold-hover: #A8893D;
+    --gold-soft: rgba(201,168,76,0.1);
+    --red: #E63946;
+    --red-soft: rgba(230,57,70,0.1);
+    --text: #FFFFFF;
+    --text-muted: #A0A0A0;
+    --radius: 14px;
+    --radius-lg: 22px;
+    --max-width: 1160px;
+    --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+  a { color: inherit; }
+  h1, h2, h3 { margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 15px 28px; min-height: 48px; border-radius: 999px;
+    font-weight: 700; font-size: 1rem; border: 1px solid transparent;
+    text-decoration: none; white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--gold); color: #0A0A0A; box-shadow: 0 8px 24px -8px rgba(201,168,76,0.5); }
+  .btn-primary:hover { background: var(--gold-hover); }
+  .btn-outline { background: transparent; color: var(--text); border-color: #3a3226; }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-small { padding: 11px 20px; min-height: 40px; font-size: 0.9rem; }
+  .btn-full { width: 100%; }
+
+  /* ---------- Nav ---------- */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(10,10,10,0.88); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--panel-border);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+  .nav-logo { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; text-decoration: none; }
+  .nav-logo span { color: var(--gold); }
+  .nav-desktop-cta { display: inline-flex; }
+  .nav-toggle {
+    display: none; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+    width: 48px; height: 48px; background: none; border: 1px solid var(--panel-border); border-radius: 10px;
+  }
+  .nav-toggle span { width: 20px; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.2s ease, opacity 0.2s ease; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-mobile { display: none; flex-direction: column; gap: 10px; padding: 16px 0 22px; border-top: 1px solid var(--panel-border); }
+  .nav-mobile a.btn { width: 100%; }
+  body.nav-open .nav-mobile { display: flex; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; padding: 100px 0 90px; overflow: hidden; text-align: center; }
+  .hero-bg {
+    position: absolute; inset: -20%; z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 20%, rgba(201,168,76,0.28), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 75% 60%, rgba(201,168,76,0.12), transparent 60%),
+      var(--bg);
+    background-size: 140% 140%;
+    animation: heroDrift 20s ease-in-out infinite alternate;
+  }
+  @keyframes heroDrift {
+    0%   { background-position: 0% 0%, 100% 100%, 0 0; }
+    100% { background-position: 30% 20%, 60% 40%, 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-bg { animation: none; } }
+  .hero-inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .eyebrow {
+    display: inline-block; text-transform: uppercase; letter-spacing: 0.14em;
+    font-size: 0.78rem; font-weight: 700; color: var(--gold);
+    background: var(--gold-soft); border: 1px solid rgba(201,168,76,0.35);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 24px;
+  }
+  .hero h1 { font-size: clamp(2.1rem, 6vw, 3.8rem); line-height: 1.1; margin-bottom: 20px; }
+  .hero-sub { font-size: clamp(1.05rem, 2.4vw, 1.4rem); font-weight: 400; color: var(--text-muted); max-width: 56ch; margin: 0 auto 40px; }
+  .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  /* ---------- Sections ---------- */
+  .section { padding: 96px 0; border-top: 1px solid var(--panel-border); }
+  .section-head { max-width: 680px; margin: 0 auto 52px; text-align: center; }
+  .section-head h2 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.18; margin-bottom: 14px; text-wrap: balance; }
+  .section-head p { font-size: 1.08rem; color: var(--text-muted); }
+  .section-close { text-align: center; max-width: 640px; margin: 44px auto 0; font-size: 1.1rem; font-weight: 600; }
+  .section-close .gold { color: var(--gold); }
+
+  /* ---------- Reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.is-visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ---------- Numbered cards (Problem, Territory) ---------- */
+  .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .num-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 30px 26px; }
+  .num-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 50%; background: var(--gold-soft);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold);
+    font-weight: 800; font-size: 1rem; margin-bottom: 18px;
+  }
+  .num-card h3 { font-size: 1.12rem; margin-bottom: 10px; }
+  .num-card p { color: var(--text-muted); font-size: 0.98rem; }
+
+  /* ---------- Pillars ---------- */
+  .pillar-grid { display: flex; flex-direction: column; gap: 20px; }
+  .pillar-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 32px; }
+  .pillar-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .pillar-num { font-family: inherit; font-size: 0.8rem; font-weight: 800; color: var(--gold); letter-spacing: 0.06em; }
+  .pillar-card h3 { font-size: 1.3rem; }
+  .pillar-card .pillar-tag { font-size: 0.92rem; color: var(--text-muted); font-weight: 500; }
+  .pillar-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .pillar-list li { position: relative; padding-left: 22px; font-size: 0.96rem; color: var(--text-muted); }
+  .pillar-list li::before { content: "—"; position: absolute; left: 0; color: var(--gold); }
+
+  /* ---------- Before / After ---------- */
+  .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .ba-col { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 28px; }
+  .ba-col h3 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 18px; }
+  .ba-col.before h3 { color: var(--text-muted); }
+  .ba-col.after h3 { color: var(--gold); }
+  .ba-col li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 0.96rem; }
+  .ba-col.before li { color: var(--text-muted); }
+  .ba-col.after li { color: var(--text); }
+  .ba-mark { flex-shrink: 0; font-weight: 800; }
+  .ba-col.before .ba-mark { color: var(--red); }
+  .ba-col.after .ba-mark { color: var(--gold); }
+
+  /* ---------- Market stats ---------- */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .stat-card { text-align: center; padding: 8px; }
+  .stat-num { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: var(--gold); letter-spacing: -0.02em; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+  .stat-card p { color: var(--text-muted); font-size: 0.98rem; }
+
+  /* ---------- Revenue table ---------- */
+  .revenue-wrap { max-width: 760px; margin: 0 auto; }
+  .revenue-table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .revenue-table th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); padding: 14px 20px; border-bottom: 1px solid var(--panel-border); }
+  .revenue-table td { padding: 16px 20px; border-bottom: 1px solid var(--panel-border); font-size: 0.98rem; }
+  .revenue-table tr:last-child td { border-bottom: none; }
+  .revenue-table .ask { color: var(--gold); font-style: italic; font-weight: 600; }
+  .revenue-table .highlight td:last-child { color: var(--gold); font-weight: 700; }
+  .revenue-note { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 20px; font-style: italic; }
+  .stream-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 32px; }
+  .stream-card { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius); padding: 20px; text-align: center; font-size: 0.95rem; }
+  .stream-card strong { display: block; color: var(--gold); margin-bottom: 6px; font-size: 0.98rem; }
+
+  /* ---------- Demo cards ---------- */
+  .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .demo-card {
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg);
+    padding: 28px; display: flex; flex-direction: column; gap: 14px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .demo-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .demo-tag {
+    align-self: flex-start; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--gold); background: var(--gold-soft); border: 1px solid rgba(201,168,76,0.35);
+    padding: 5px 12px; border-radius: 999px;
+  }
+  .demo-card h3 { font-size: 1.2rem; }
+  .demo-card p { color: var(--text-muted); font-size: 0.94rem; }
+  .demo-access { font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 0.82rem; background: var(--bg); border: 1px solid var(--panel-border); border-radius: 8px; padding: 8px 12px; color: var(--text-muted); }
+  .demo-access b { color: var(--text); }
+  .demo-note { text-align: center; color: var(--text-muted); font-size: 0.98rem; margin-top: 36px; font-weight: 500; }
+
+  /* ---------- Territory steps ---------- */
+  .territory-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 4px; }
+  .territory-item { display: flex; gap: 18px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--panel-border); }
+  .territory-item:last-child { border-bottom: none; }
+  .territory-dot { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 9px; }
+  .territory-item p { font-size: 1.02rem; }
+  .territory-item p strong { color: var(--gold); }
+
+  /* ---------- Who this is for ---------- */
+  .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .who-col { background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 28px; }
+  .who-col h3 { font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 18px; }
+  .who-col.yes h3 { color: var(--gold); }
+  .who-col.no h3 { color: var(--text-muted); }
+  .who-col li { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 0.98rem; }
+  .who-mark { flex-shrink: 0; font-weight: 800; }
+  .who-col.yes .who-mark { color: var(--gold); }
+  .who-col.no .who-mark { color: var(--red); }
+
+  /* ---------- Forms ---------- */
+  .form-row { display: flex; flex-direction: column; gap: 8px; }
+  .form-row label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+  .form-row input, .form-row select, .form-row textarea {
+    background: var(--panel); border: 1px solid var(--panel-border); color: var(--text);
+    border-radius: 10px; padding: 13px 14px; font-size: 1rem; font-family: inherit; min-height: 48px;
+  }
+  .form-row textarea { min-height: 100px; resize: vertical; }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--gold); }
+  .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .contact-form { max-width: 640px; margin: 0 auto; background: var(--panel); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 36px; display: flex; flex-direction: column; gap: 20px; }
+  .contact-hint { text-align: center; color: var(--text-muted); font-size: 0.88rem; }
+  .contact-status { text-align: center; font-size: 0.92rem; min-height: 1.2em; }
+  .contact-status.is-success { color: #6ee7a0; }
+
+  /* ---------- Footer ---------- */
+  .site-footer { border-top: 1px solid var(--panel-border); padding: 56px 0 32px; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px; padding-bottom: 32px; }
+  .footer-brand-name { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+  .footer-brand-name span { color: var(--gold); }
+  .footer-tagline { color: var(--text-muted); font-size: 0.95rem; max-width: 340px; }
+  .footer-family { color: var(--text-muted); font-size: 0.85rem; margin-top: 10px; }
+  .footer-links { display: flex; gap: 22px; }
+  .footer-links a { color: var(--text-muted); font-size: 0.9rem; text-decoration: none; }
+  .footer-links a:hover { color: var(--text); }
+  .footer-bottom { border-top: 1px solid var(--panel-border); padding-top: 24px; color: var(--text-muted); font-size: 0.82rem; text-align: center; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .num-grid, .stat-grid, .demo-grid, .stream-list { grid-template-columns: 1fr 1fr; }
+    .ba-grid, .who-grid { grid-template-columns: 1fr; }
+    .pillar-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .nav-desktop-cta { display: none; }
+    .nav-toggle { display: flex; }
+    .hero { padding: 64px 0 64px; }
+    .section { padding: 64px 0; }
+    .num-grid, .stat-grid, .demo-grid, .stream-list { grid-template-columns: 1fr; }
+    .form-2col { grid-template-columns: 1fr; }
+    .hero-ctas { flex-direction: column; align-items: stretch; }
+    .footer-top { flex-direction: column; }
+    .revenue-table th, .revenue-table td { padding: 12px 14px; font-size: 0.88rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="site-nav">
+  <div class="container nav-inner">
+    <a href="#top" class="nav-logo" id="top">Edack<span>Web</span></a>
+    <a href="#contact" class="btn btn-primary btn-small nav-desktop-cta">Register Your Interest</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="container nav-mobile" id="navMobile">
+    <a href="#demos" class="btn btn-outline btn-full">See The System</a>
+    <a href="#contact" class="btn btn-primary btn-full">Register Your Interest</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <span class="eyebrow">The Complete Business System for Local Trades</span>
+      <h1>The Complete Business System For Local Trades.</h1>
+      <p class="hero-sub">Website. Job management. Contracts. All included. One territory. Yours.</p>
+      <div class="hero-ctas">
+        <a href="#demos" class="btn btn-outline">See The System</a>
+        <a href="#contact" class="btn btn-primary">Register Your Interest</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== THE PROBLEM ===== -->
+  <section class="section reveal" id="problem">
+    <div class="container">
+      <div class="section-head">
+        <h2>Local trades are running billion-pound industries on WhatsApp and a notebook.</h2>
+      </div>
+      <div class="num-grid">
+        <div class="num-card">
+          <div class="num-badge">1</div>
+          <h3>Invisible Online</h3>
+          <p>No website. No Google presence. Losing customers to competitors who simply showed up first.</p>
+        </div>
+        <div class="num-card">
+          <div class="num-badge">2</div>
+          <h3>No Job Control</h3>
+          <p>Costs tracked on paper. Margins unknown. Jobs that quietly lose money because nobody's watching the numbers.</p>
+        </div>
+        <div class="num-card">
+          <div class="num-badge">3</div>
+          <h3>No Legal Protection</h3>
+          <p>Customer disputes the work. No paperwork. No proof. No payment. Nothing they can do about it.</p>
+        </div>
+      </div>
+      <p class="section-close">This is the market. It's <span class="gold">enormous</span>. And it's almost entirely untouched.</p>
+    </div>
+  </section>
+
+  <!-- ===== THE SOLUTION ===== -->
+  <section class="section reveal" id="solution">
+    <div class="container">
+      <div class="section-head">
+        <h2>One system. Three problems solved.</h2>
+      </div>
+      <div class="pillar-grid">
+        <div class="pillar-card">
+          <div class="pillar-head">
+            <span class="pillar-num">01</span>
+            <h3>EdackWeb</h3>
+            <span class="pillar-tag">— The Front Door</span>
+          </div>
+          <ul class="pillar-list">
+            <li>Professional website built in hours</li>
+            <li>Google SEO built in automatically</li>
+            <li>Photo gallery — show off their work</li>
+            <li>Contact form — leads arrive directly</li>
+            <li>Mobile-ready, always</li>
+            <li>They manage it themselves — as easy as Facebook</li>
+          </ul>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-head">
+            <span class="pillar-num">02</span>
+            <h3>LOCIFY Build</h3>
+            <span class="pillar-tag">— The Engine Room</span>
+          </div>
+          <ul class="pillar-list">
+            <li>Every job tracked start to finish</li>
+            <li>Materials, costs and margins in real time</li>
+            <li>Gantt chart — who does what, when</li>
+            <li>Stage payments tied to completed work</li>
+            <li>PDF completion certificates generated automatically</li>
+            <li>Four access levels — contractor, customer, subcontractor, labourer</li>
+            <li>Photo and document storage per job</li>
+          </ul>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-head">
+            <span class="pillar-num">03</span>
+            <h3>Contracts Manager</h3>
+            <span class="pillar-tag">— The Legal Net</span>
+          </div>
+          <ul class="pillar-list">
+            <li>Customer signs off each stage digitally</li>
+            <li>Tamper-evident audit trail — every action recorded, time-stamped</li>
+            <li>PDF completion certificates — legally defensible</li>
+            <li>Payment tied to sign-off — no sign-off, no payment trigger</li>
+            <li>Full protection against "I never agreed to that" disputes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BEFORE / AFTER ===== -->
+  <section class="section reveal" id="before-after">
+    <div class="container">
+      <div class="section-head">
+        <h2>What changes for a tradesperson.</h2>
+      </div>
+      <div class="ba-grid">
+        <div class="ba-col before">
+          <h3>Before</h3>
+          <ul>
+            <li><span class="ba-mark">✕</span> No website — invisible to Google</li>
+            <li><span class="ba-mark">✕</span> Jobs managed on WhatsApp</li>
+            <li><span class="ba-mark">✕</span> Costs tracked on paper</li>
+            <li><span class="ba-mark">✕</span> Invoices on spreadsheets</li>
+            <li><span class="ba-mark">✕</span> No paper trail for disputes</li>
+            <li><span class="ba-mark">✕</span> Chasing payments manually</li>
+            <li><span class="ba-mark">✕</span> Looks like a one-man band</li>
+          </ul>
+        </div>
+        <div class="ba-col after">
+          <h3>After</h3>
+          <ul>
+            <li><span class="ba-mark">✓</span> Professional website — Google-ready</li>
+            <li><span class="ba-mark">✓</span> Every job tracked digitally</li>
+            <li><span class="ba-mark">✓</span> Real-time costs and margins</li>
+            <li><span class="ba-mark">✓</span> Stage invoices generated automatically</li>
+            <li><span class="ba-mark">✓</span> Full digital audit trail</li>
+            <li><span class="ba-mark">✓</span> Payments tied to customer sign-off</li>
+            <li><span class="ba-mark">✓</span> Looks like a proper company</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== THE MARKET ===== -->
+  <section class="section reveal" id="market">
+    <div class="container">
+      <div class="section-head">
+        <h2>The opportunity is enormous.</h2>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-num">5.5M</div>
+          <p>Small businesses in the UK</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">60%+</div>
+          <p>Have no effective web presence</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">100,000s</div>
+          <p>Of trades businesses alone — all potential clients</p>
+        </div>
+      </div>
+      <p class="section-close">Nobody has cracked the local trades market with a system this complete. <span class="gold">Yet.</span></p>
+    </div>
+  </section>
+
+  <!-- ===== REVENUE MODEL ===== -->
+  <section class="section reveal" id="revenue">
+    <div class="container">
+      <div class="section-head">
+        <h2>What this looks like financially.</h2>
+      </div>
+      <div class="revenue-wrap">
+        <table class="revenue-table">
+          <thead>
+            <tr><th>Item</th><th>Figure</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Setup fee per client</td><td class="ask">Ask us</td></tr>
+            <tr><td>Monthly fee per client</td><td class="ask">Ask us</td></tr>
+            <tr class="highlight"><td>At 50 clients</td><td>Significant recurring monthly income</td></tr>
+            <tr class="highlight"><td>At 100 clients</td><td>Life-changing recurring monthly income</td></tr>
+          </tbody>
+        </table>
+        <p class="revenue-note">Exact figures discussed with serious enquiries only.</p>
+      </div>
+      <div class="stream-list">
+        <div class="stream-card"><strong>Website Setup</strong>One-off fee, per client</div>
+        <div class="stream-card"><strong>Hosting &amp; Support</strong>Recurring, monthly</div>
+        <div class="stream-card"><strong>LOCIFY Build Licence</strong>Recurring, monthly</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIVE DEMOS ===== -->
+  <section class="section reveal" id="demos">
+    <div class="container">
+      <div class="section-head">
+        <h2>This isn't a pitch deck. It's a live system.</h2>
+        <p>Everything you're reading about is built, tested and running right now.</p>
+      </div>
+      <div class="demo-grid">
+        <div class="demo-card">
+          <span class="demo-tag">EdackWeb Demo</span>
+          <h3>Taffin Auto Spray</h3>
+          <p>A real EdackWeb site for an automotive spray and collision repair business.</p>
+          <a href="https://taffin-auto-spray-production.up.railway.app" class="btn btn-primary" target="_blank" rel="noopener">View Live Site ↗</a>
+        </div>
+        <div class="demo-card">
+          <span class="demo-tag">EdackWeb Demo</span>
+          <h3>Sweet Dreams Kitchens</h3>
+          <p>A real EdackWeb site for a bespoke kitchen fitting business.</p>
+          <a href="https://sweet-dreams-kitchens-production.up.railway.app" class="btn btn-primary" target="_blank" rel="noopener">View Live Site ↗</a>
+        </div>
+        <div class="demo-card">
+          <span class="demo-tag">LOCIFY Build Demo</span>
+          <h3>LOCIFY Build</h3>
+          <p>The live job management and contracts system. Log in and explore.</p>
+          <div class="demo-access">Password: <b>Locify2026</b></div>
+          <a href="https://locify-build-production.up.railway.app" class="btn btn-primary" target="_blank" rel="noopener">View Live System ↗</a>
+        </div>
+      </div>
+      <p class="demo-note">These are real, live systems. Not mockups. Not screenshots. Log in. Click around. See for yourself.</p>
+    </div>
+  </section>
+
+  <!-- ===== TERRITORY MODEL ===== -->
+  <section class="section reveal" id="territory">
+    <div class="container">
+      <div class="section-head">
+        <h2>One investor. One territory. Full control.</h2>
+      </div>
+      <div class="territory-list">
+        <div class="territory-item"><span class="territory-dot"></span><p><strong>You take a territory</strong> — town, city, or region, your choice.</p></div>
+        <div class="territory-item"><span class="territory-dot"></span><p><strong>You deploy EdackWeb and LOCIFY Build</strong> to local trades businesses.</p></div>
+        <div class="territory-item"><span class="territory-dot"></span><p><strong>You own the client relationships.</strong></p></div>
+        <div class="territory-item"><span class="territory-dot"></span><p><strong>You set your own pricing</strong> within guidelines.</p></div>
+        <div class="territory-item"><span class="territory-dot"></span><p><strong>You keep the recurring revenue.</strong></p></div>
+        <div class="territory-item"><span class="territory-dot"></span><p><strong>We provide the system,</strong> the support, and the updates.</p></div>
+      </div>
+      <p class="section-close">This isn't a franchise. There's no bureaucracy. <span class="gold">You run it your way.</span></p>
+    </div>
+  </section>
+
+  <!-- ===== WHO THIS IS FOR ===== -->
+  <section class="section reveal" id="who">
+    <div class="container">
+      <div class="section-head">
+        <h2>You've found this page for a reason.</h2>
+      </div>
+      <div class="who-grid">
+        <div class="who-col yes">
+          <h3>This is for you if</h3>
+          <ul>
+            <li><span class="who-mark">✓</span> You understand local business</li>
+            <li><span class="who-mark">✓</span> You're willing to make a small number of sales calls</li>
+            <li><span class="who-mark">✓</span> You want recurring monthly income, not a one-off payday</li>
+            <li><span class="who-mark">✓</span> You see the gap in the market and want to own it locally</li>
+          </ul>
+        </div>
+        <div class="who-col no">
+          <h3>This is not for you if</h3>
+          <ul>
+            <li><span class="who-mark">✕</span> You want passive income with zero effort</li>
+            <li><span class="who-mark">✕</span> You're looking for a get-rich-quick scheme</li>
+            <li><span class="who-mark">✕</span> You don't believe local trades need better tools</li>
+          </ul>
+        </div>
+      </div>
+      <p class="section-close">If you're still reading — <span class="gold">you probably get it.</span></p>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section reveal" id="contact">
+    <div class="container">
+      <div class="section-head">
+        <h2>Register Your Interest.</h2>
+        <p>No prices on this page. No pressure on this call. Just a conversation about whether this is right for you.</p>
+      </div>
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-2col">
+          <div class="form-row">
+            <label for="cName">Your name</label>
+            <input type="text" id="cName" name="name" required>
+          </div>
+          <div class="form-row">
+            <label for="cLocation">Your location (town/city)</label>
+            <input type="text" id="cLocation" name="location" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="cOccupation">Current occupation / background</label>
+          <input type="text" id="cOccupation" name="occupation" required>
+        </div>
+        <div class="form-row">
+          <label for="cWhy">Why this interests you</label>
+          <textarea id="cWhy" name="why" placeholder="Tell us a little about why you're looking at this..."></textarea>
+        </div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label for="cMethod">Preferred contact method</label>
+            <select id="cMethod" name="method">
+              <option value="Phone">Phone</option>
+              <option value="Email">Email</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="cContact">Contact details (phone or email)</label>
+            <input type="text" id="cContact" name="contact" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Register My Interest</button>
+        <p class="contact-hint">This opens your email app with your details filled in, ready to send.</p>
+        <p class="contact-status" id="contactStatus" role="status"></p>
+      </form>
+      <p class="section-close" style="margin-top:32px; font-size:0.95rem; font-weight:400; color:var(--text-muted);">We respond to every serious enquiry within 48 hours. Your details are never shared.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">Edack<span>Web</span></div>
+        <p class="footer-tagline">The Complete Business System for Local Trades</p>
+        <p class="footer-family">Part of the Edack family</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; <span id="footerYear">2026</span> EdackWeb. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var yearEl = document.getElementById('footerYear');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  var navToggle = document.getElementById('navToggle');
+  var navMobile = document.getElementById('navMobile');
+  if (navToggle) {
+    navToggle.addEventListener('click', function () {
+      var open = document.body.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', String(open));
+    });
+    navMobile.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        document.body.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  var reveals = document.querySelectorAll('.reveal');
+  var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+  } else {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { observer.observe(el); });
+  }
+
+  var form = document.getElementById('contactForm');
+  var status = document.getElementById('contactStatus');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = document.getElementById('cName').value.trim();
+      var location = document.getElementById('cLocation').value.trim();
+      var occupation = document.getElementById('cOccupation').value.trim();
+      var why = document.getElementById('cWhy').value.trim();
+      var method = document.getElementById('cMethod').value;
+      var contact = document.getElementById('cContact').value.trim();
+
+      if (!name || !location || !occupation || !contact) {
+        status.textContent = 'Please fill in all required fields.';
+        status.className = 'contact-status';
+        return;
+      }
+
+      var subject = 'Investor interest — ' + name + ' (' + location + ')';
+      var bodyLines = [
+        'Name: ' + name,
+        'Location: ' + location,
+        'Occupation / background: ' + occupation,
+        'Why this interests them: ' + (why || '(none given)'),
+        'Preferred contact method: ' + method,
+        'Contact details: ' + contact
+      ];
+      var mailto = 'mailto:dai.evans1@gmail.com'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+
+      window.location.href = mailto;
+      status.textContent = 'Opening your email app now — just hit send!';
+      status.className = 'contact-status is-success';
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

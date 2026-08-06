@@ -1,0 +1,15 @@
+{
+  "name": "edackweb-investor",
+  "version": "1.0.0",
+  "description": "EdackWeb investor landing page — minimal static server",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
