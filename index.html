@@ -592,7 +592,7 @@
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-full">Register My Interest</button>
-        <p class="contact-hint">This opens your email app with your details filled in, ready to send.</p>
+        <p class="contact-hint">We'll save your details and get back to you directly — no email app needed.</p>
         <p class="contact-status" id="contactStatus" role="status"></p>
       </form>
       <p class="section-close" style="margin-top:32px; font-size:0.95rem; font-weight:400; color:var(--text-muted);">We respond to every serious enquiry within 48 hours. Your details are never shared.</p>
@@ -675,22 +675,41 @@
         return;
       }
 
-      var subject = 'Investor interest — ' + name + ' (' + location + ')';
-      var bodyLines = [
-        'Name: ' + name,
-        'Location: ' + location,
-        'Occupation / background: ' + occupation,
-        'Why this interests them: ' + (why || '(none given)'),
-        'Preferred contact method: ' + method,
-        'Contact details: ' + contact
-      ];
-      var mailto = 'mailto:dai.evans1@gmail.com'
-        + '?subject=' + encodeURIComponent(subject)
-        + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+      var submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      status.textContent = 'Sending...';
+      status.className = 'contact-status';
 
-      window.location.href = mailto;
-      status.textContent = 'Opening your email app now — just hit send!';
-      status.className = 'contact-status is-success';
+      fetch('/api/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          location: location,
+          occupation: occupation,
+          why: why,
+          preferredContact: method,
+          contactDetails: contact
+        })
+      })
+        .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+        .then(function (result) {
+          if (result.ok && result.data.ok) {
+            form.reset();
+            status.textContent = 'Thank you ' + result.data.name + '. We\'ll be in touch within 48 hours.';
+            status.className = 'contact-status is-success';
+          } else {
+            status.textContent = (result.data && result.data.error) || 'Something went wrong. Please try again.';
+            status.className = 'contact-status';
+          }
+        })
+        .catch(function () {
+          status.textContent = 'Network error — please try again.';
+          status.className = 'contact-status';
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+        });
     });
   }
 })();
