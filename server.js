@@ -33,8 +33,7 @@ Name: ${entry.name}
 Location: ${entry.location}
 Occupation: ${entry.occupation}
 Why interested: ${entry.why}
-Preferred contact: ${entry.preferredContact}
-Contact details: ${entry.contactDetails}
+Email: ${entry.email}
 Time: ${entry.timestamp}`;
 
   await resend.emails.send({
@@ -49,9 +48,9 @@ app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
 
 app.post('/api/enquiry', async (req, res) => {
-  const { name, location, occupation, why, preferredContact, contactDetails } = req.body || {};
+  const { name, location, occupation, why, email } = req.body || {};
 
-  if (!name || !location || !occupation || !contactDetails) {
+  if (!name || !location || !occupation || !email) {
     return res.status(400).json({ ok: false, error: 'Please fill in all required fields.' });
   }
 
@@ -60,8 +59,7 @@ app.post('/api/enquiry', async (req, res) => {
     location: String(location).trim(),
     occupation: String(occupation).trim(),
     why: String(why || '').trim(),
-    preferredContact: String(preferredContact || '').trim(),
-    contactDetails: String(contactDetails).trim(),
+    email: String(email).trim(),
     timestamp: new Date().toISOString()
   };
 

@@ -578,18 +578,9 @@
           <label for="cWhy">Why this interests you</label>
           <textarea id="cWhy" name="why" placeholder="Tell us a little about why you're looking at this..."></textarea>
         </div>
-        <div class="form-2col">
-          <div class="form-row">
-            <label for="cMethod">Preferred contact method</label>
-            <select id="cMethod" name="method">
-              <option value="Phone">Phone</option>
-              <option value="Email">Email</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label for="cContact">Contact details (phone or email)</label>
-            <input type="text" id="cContact" name="contact" required>
-          </div>
+        <div class="form-row">
+          <label for="cEmail">Your email address</label>
+          <input type="email" id="cEmail" name="email" required>
         </div>
         <button type="submit" class="btn btn-primary btn-full">Register My Interest</button>
         <p class="contact-hint">We'll save your details and get back to you directly — no email app needed.</p>
@@ -666,10 +657,9 @@
       var location = document.getElementById('cLocation').value.trim();
       var occupation = document.getElementById('cOccupation').value.trim();
       var why = document.getElementById('cWhy').value.trim();
-      var method = document.getElementById('cMethod').value;
-      var contact = document.getElementById('cContact').value.trim();
+      var email = document.getElementById('cEmail').value.trim();
 
-      if (!name || !location || !occupation || !contact) {
+      if (!name || !location || !occupation || !email) {
         status.textContent = 'Please fill in all required fields.';
         status.className = 'contact-status';
         return;
@@ -688,8 +678,7 @@
           location: location,
           occupation: occupation,
           why: why,
-          preferredContact: method,
-          contactDetails: contact
+          email: email
         })
       })
         .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
